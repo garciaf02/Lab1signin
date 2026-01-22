@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Create User</title>
+</head>
+<body>
+  <h1>Create New User</h1>
+
+  <form id="createUserForm">
+    
+    <label>Username</label><br />
+    <input type="text" name="Username" required /><br /><br />
+    <label>Password</label><br />
+    <input type="password" name="Password" required /><br /><br />
+    <label>First Name</label><br />
+    <input type="text" name="First_name" required /><br /><br />
+    <label>Last Name</label><br />
+    <input type="text" name="Last_name" required /><br /><br />
+    <label>Birthday</label><br />
+    <input type="text" name="Birthday" placeholder="MM/DD/YYYY" required /><br /><br />
+
+    <button type="submit">Create User</button>
+  </form>
+
+  <p id="result"></p>
+
+  <script>
+    const form = document.getElementById('createUserForm');
+    const result = document.getElementById('result');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+
+      try {
+        const res = await fetch('/create-user', {
+          method: 'POST',
+          body: new URLSearchParams(formData)
+        });
+
+        const text = await res.text();
+        result.textContent = text;
+      } catch (err) {
+        result.textContent = 'Error contacting server';
+      }
+    });
+  </script>
+</body>
+</html>

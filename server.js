@@ -15,7 +15,7 @@ const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
   password: 'Window142026', // use your MySQL password if needed
-  database: 'userdb'
+  database: 'userDB'
 });
 
 
@@ -66,7 +66,37 @@ res.send('Invalid username or password.');
 });
 });
 
+//create-user 
+app.post('/create-user', (req, res) => {
+  const { username, password, first_name, last_name, birthday } = req.body;
 
+  if (!username || !password || !first_name || !last_name || !birthday) {
+    return res.status(400).send('All fields are required.');
+  }
+
+  const hashedPassword = crypto
+    .createHash('sha256')
+    .update(password)
+    .digest('hex');
+
+  const sql = `
+    INSERT INTO users (username, password, first_name, last_name, birthday)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+  db.query(
+    sql,
+    [username, hashedPassword, first_name, last_name, birthday],
+    (err, results) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('Error creating user.');
+      }
+
+      res.send('User created successfully!');
+    }
+  );
+});
 
 
 app.use((req, res) => {
