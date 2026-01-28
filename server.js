@@ -14,7 +14,7 @@ app.use(express.static(__dirname));
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
-  password: 'Window142026', // use your MySQL password if needed
+  password: 'Test123!', // use your MySQL password if needed
   database: 'userDB'
 });
 
@@ -40,11 +40,11 @@ app.get('/hello-user', (req, res) => {
 });
 
 
-
-
 const crypto = require('crypto');
 app.post('/login', (req, res) => {
 const username = req.body.username;
+console.log(username);
+console.log(req.body.password);
 const hashedPassword = crypto
 .createHash('sha256')
 .update(req.body.password)
@@ -53,7 +53,7 @@ const sql = `
 SELECT * FROM users
 WHERE username = ? AND password = ?
 `;
-db.query(sql, [username, hashedPassword], (err, results) => {
+db.query(sql, [username, req.body.password], (err, results) => {
 if (err) {
 console.error(err);
 return res.status(500).send('Server error');
@@ -65,6 +65,7 @@ res.send('Invalid username or password.');
 }
 });
 });
+
 
 //create-user 
 app.post('/create-user', (req, res) => {
